@@ -32,7 +32,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         """example: multiply with constant"""
         
         #get all tags associated with input_items[0]
-        tagTuple = self.get_tags_in_window(0,0, len(input_items[0])
+        tagTuple = self.get_tags_in_window(0,0, len(input_items[0]))
         
         #declare a list
         relativeOffsetList = []
@@ -40,7 +40,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         #loop through all 'detect' tags and store their relative offset
         for tag in tagTuple:
         	if(pmt.to_python(tag.key) == 'detect'):
-        		relativeOffsetList.append(tag.offset - set.nitems_read(0))
+        		relativeOffsetList.append(tag.offset - self.nitems_read(0))
         
         #sort list of relative offsets
         relativeOffsetList.sort()
