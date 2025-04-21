@@ -26,6 +26,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""
-        difference = input_items[0]
-        output_items[0][:] = input_items[0]
+        for index in range(len(input_items[0])):
+        	difference = difference + 1
+        	# co chces spravit je ze prejdes celym prijatym polom a zistis jeho dlzku, tu posielam v message dalej, taktiez je potrebne potom nastavit flag aby system vedel ze tuto operaciu uz vykonal
         return len(output_items[0])
