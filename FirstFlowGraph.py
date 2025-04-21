@@ -36,6 +36,7 @@ from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
+import FirstFlowGraph_epy_block_0 as epy_block_0  # embedded python block
 
 
 
@@ -182,8 +183,8 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self.epy_block_0 = epy_block_0.blk()
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
-        self.blocks_sub_xx_0 = blocks.sub_ff(1)
         self.blocks_delay_1 = blocks.delay(gr.sizeof_char*1, 5)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_char*1, delay)
         self.blocks_char_to_float_1 = blocks.char_to_float(1, 1)
@@ -196,13 +197,13 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
         ##################################################
         self.connect((self.analog_random_source_x_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.analog_random_source_x_0, 0), (self.blocks_delay_1, 0))
-        self.connect((self.blocks_char_to_float_0, 0), (self.blocks_sub_xx_0, 0))
-        self.connect((self.blocks_char_to_float_1, 0), (self.blocks_sub_xx_0, 1))
+        self.connect((self.blocks_char_to_float_0, 0), (self.epy_block_0, 0))
+        self.connect((self.blocks_char_to_float_1, 0), (self.epy_block_0, 1))
         self.connect((self.blocks_char_to_float_1, 0), (self.qtgui_time_sink_x_0_0, 0))
         self.connect((self.blocks_delay_0, 0), (self.blocks_char_to_float_1, 0))
         self.connect((self.blocks_delay_1, 0), (self.blocks_char_to_float_0, 0))
-        self.connect((self.blocks_sub_xx_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.epy_block_0, 0), (self.blocks_throttle_0, 0))
 
 
     def closeEvent(self, event):
