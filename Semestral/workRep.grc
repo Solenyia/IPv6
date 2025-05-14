@@ -242,12 +242,12 @@ blocks:
       \        noutput = len(out)\n        \n        if not self.enabled:\n      \
       \      out[:] = in0[:noutput].astype(np.uint8)\n            return noutput\n\
       \n        delay = max(min(self.delay, len(in0) - 1), -len(in0) + 1)\n      \
-      \  if delay >= 0:\n            if len(in0) > delay + noutput:\n            \
-      \    out[:] = in0[delay:delay + noutput].astype(np.uint8)\n            else:\n\
-      \                out[:] = np.zeros(noutput, dtype=np.uint8)\n        else:\n\
-      \            advance = abs(delay)\n            if len(in0) > noutput:\n    \
-      \            out[:] = in0[advance:advance + noutput].astype(np.uint8)\n    \
-      \        else:\n                out[:] = np.zeros(noutput, dtype=np.uint8)\n\
+      \  \n        if delay >= 0:\n            if len(in0) > delay + noutput:\n  \
+      \              out[:] = in0[delay:delay + noutput].astype(np.uint8)\n      \
+      \      else:\n                out[:] = np.zeros(noutput, dtype=np.uint8)\n \
+      \       else:\n            advance = abs(delay)\n            if len(in0) > noutput:\n\
+      \                out[:] = in0[advance:advance + noutput].astype(np.uint8)\n\
+      \            else:\n                out[:] = np.zeros(noutput, dtype=np.uint8)\n\
       \n        return noutput\n\n"
     affinity: ''
     alias: ''

@@ -53,7 +53,6 @@ class blk(gr.sync_block):
             return noutput
 
         delay = max(min(self.delay, len(in0) - 1), -len(in0) + 1)
-
         if delay >= 0:
             if len(in0) > delay + noutput:
                 out[:] = in0[delay:delay + noutput].astype(np.uint8)

@@ -34,8 +34,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         u_index = np.argmax(correlation)
         
         delay = u_index - (len(delay_stream) - 1)
-        # bug fix ----- random source samples na 2k, nakolko sa rozdeluju na dva prudy moze
-        # blbnut
         msg = pmt.cons(pmt.PMT_NIL, pmt.from_long(delay))
         self.message_port_pub(pmt.intern("delay_msg"), msg)
         
