@@ -20,9 +20,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             self,
             name='Custom Difference Block',   # so we may modify it if needed
             in_sig=[np.float32, np.float32],
-            out_sig=[np.float32]
-            
+            out_sig=[np.float32] 
         )
+        self.message_port_register_out(pmt.intern("delay_msg"))
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""
@@ -37,7 +37,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         # bug fix ----- random source samples na 2k, nakolko sa rozdeluju na dva prudy moze
         # blbnut
         msg = pmt.cons(pmt.PMT_NIL, pmt.from_long(delay))
-        self.message_port_register_out(pmt.intern("delay_message"))
+        self.message_port_pub(pmt.intern("delay_msg"), msg)
+        
         print("delay value:", delay)
 	
         output_items[0][:] = np.full_like(output_items[0], delay)
