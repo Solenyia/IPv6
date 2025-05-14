@@ -84,7 +84,7 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self._delay_range = Range(0, 10, 1, 0, 200)
+        self._delay_range = Range(0, 500, 1, 0, 1000)
         self._delay_win = RangeWidget(self._delay_range, self.set_delay, "manual delay", "counter_slider", int, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._delay_win)
         self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
@@ -136,7 +136,7 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
         self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            200, #size
+            1000, #size
             samp_rate, #samp_rate
             "", #name
             1, #number of inputs
@@ -145,7 +145,7 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.set_update_time(0.10)
         self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
 
-        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0.set_y_label('Delay', "")
 
         self.qtgui_time_sink_x_0.enable_tags(True)
         self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
@@ -185,11 +185,12 @@ class FirstFlowGraph(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.epy_block_0 = epy_block_0.blk()
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
-        self.blocks_delay_1 = blocks.delay(gr.sizeof_char*1, 5)
+        self.blocks_message_debug_0 = blocks.message_debug(True)
+        self.blocks_delay_1 = blocks.delay(gr.sizeof_char*1, 0)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_char*1, delay)
         self.blocks_char_to_float_1 = blocks.char_to_float(1, 1)
         self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
-        self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 256, 1000))), True)
+        self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 256, 2000))), True)
 
 
         ##################################################

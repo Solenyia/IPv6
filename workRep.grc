@@ -39,12 +39,12 @@ blocks:
     comment: ''
     gui_hint: ''
     label: manual delay
-    min_len: '200'
+    min_len: '1000'
     orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '0'
     step: '1'
-    stop: '10'
+    stop: '500'
     value: '0'
     widget: counter_slider
   states:
@@ -76,7 +76,7 @@ blocks:
     maxoutbuf: '0'
     min: '0'
     minoutbuf: '0'
-    num_samps: '1000'
+    num_samps: '2000'
     repeat: 'True'
     type: byte
   states:
@@ -145,7 +145,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '5'
+    delay: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -155,7 +155,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 152.0]
+    coordinate: [376, 168.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 440.0]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -174,7 +188,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1032, 196.0]
+    coordinate: [1032, 284.0]
     rotation: 0
     state: true
 - name: epy_block_0
@@ -184,29 +198,38 @@ blocks:
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
-      \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
-      \ example - a simple multiply const\"\"\"\n\n    def __init__(self):  # only\
-      \ default arguments here\n        \"\"\"arguments to this function show up as\
-      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
-      \            name='Custom Subtract Block',   # so we may modify it if needed\n\
-      \            in_sig=[np.float32, np.float32],\n            out_sig=[np.float32]\n\
-      \        )\n\n    def work(self, input_items, output_items):\n        \"\"\"\
-      example: multiply with constant\"\"\"\n        output_items[0][:] = input_items[0]\
-      \ - input_items[1]\n        return len(output_items[0])\n"
+      import pmt\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other\
+      \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
+      \ Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Custom Difference Block',   # so we may modify\
+      \ it if needed\n            in_sig=[np.float32, np.float32],\n            out_sig=[np.float32]\
+      \ \n        )\n        self.message_port_register_out(pmt.intern(\"delay_msg\"\
+      ))\n\n    def work(self, input_items, output_items):\n        \"\"\"example:\
+      \ multiply with constant\"\"\"\n       \tmain_stream = input_items[0]\n    \
+      \    delay_stream = input_items[1]\n        \n        #when you multiply the\
+      \ arrays, one \"rotates\"\n        correlation = np.correlate(main_stream, delay_stream,\
+      \ mode='full')\n        u_index = np.argmax(correlation)\n        \n       \
+      \ delay = u_index - (len(delay_stream) - 1)\n        # bug fix ----- random\
+      \ source samples na 2k, nakolko sa rozdeluju na dva prudy moze\n        # blbnut\n\
+      \        msg = pmt.cons(pmt.PMT_NIL, pmt.from_long(delay))\n        self.message_port_pub(pmt.intern(\"\
+      delay_msg\"), msg)\n        \n        print(\"delay value:\", delay)\n\t\n \
+      \       output_items[0][:] = np.full_like(output_items[0], delay)\n        return\
+      \ len(output_items[0])\n        \n"
     affinity: ''
     alias: ''
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
-    _io_cache: ('Custom Subtract Block', 'blk', [], [('0', 'float', 1), ('1', 'float',
-      1)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
-      const', [])
+    _io_cache: ('Custom Difference Block', 'blk', [], [('0', 'float', 1), ('1', 'float',
+      1)], [('0', 'float', 1), ('delay_msg', 'message', 1)], 'Embedded Python Block
+      example - a simple multiply const', [])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 192.0]
+    coordinate: [752, 200.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -264,7 +287,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
-    size: '200'
+    size: '1000'
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -295,7 +318,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    ylabel: Amplitude
+    ylabel: Delay
     ymax: '1'
     ymin: '-1'
     yunit: '""'
@@ -303,7 +326,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1344, 212.0]
+    coordinate: [1216, 188.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0
@@ -400,7 +423,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 412.0]
+    coordinate: [1088, 444.0]
     rotation: 0
     state: true
 
